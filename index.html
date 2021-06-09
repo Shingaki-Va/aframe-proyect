@@ -1,0 +1,83 @@
+<script src='https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js'></script>
+<meta name="viewport" content="width=600px, height=480px, user-scalable=no, minimum-scale=1, maximum-scale=1">
+<!-- aframe extras -->
+<script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+<script src="https://unpkg.com/aframe-button-controls@^1.0.1/aframe-button-controls.js"></script>	
+<!-- rawgithack development URL -->
+<script src='https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js'></script>
+<!-- css -->
+<link rel="stylesheet" href="style.css">
+<body class="body">
+   <!-- minimal loader shown until image descriptors are loaded -->
+  <div class="arjs-loader">
+    <div>Loading, please wait...</div>
+  </div>
+  <script>
+    AFRAME.registerComponent("foo", {
+    init: function() {
+    
+    this.el.addEventListener("click", (e)=>{console.log("HELpLO")})
+    }
+    })
+    
+    </script>
+    <a-scene
+        vr-mode-ui='enabled: false;'
+        renderer="logarithmicDepthBuffer: true;"
+        embedded arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'>
+
+        <a-box id="boxId" position="0 0.5 -3" rotation="0 45 0" color="blue" scale= "1 1 1" foo></a-box>
+        <a-entity cursor="fuse: false" 
+          position="0 0 -1"  
+          geometry="primitive:ring; radiusInner: 0.02; radiusOuter: 0.03"  
+          material="color: black; shader: flat"></a-ring>
+
+        <!-- use rawgithack to retrieve the correct url for nft marker (see 'pinball' below) -->
+        <a-nft
+            type='nft' url='./src/dataNFT/batman/batman'
+            smooth='true' smoothCount='10' smoothTolerance='0.01' smoothThreshold='5'>
+
+            <!-- load glb -->
+            <a-asset-item id="bird" response-type="arraybuffer" src="https://cdn.glitch.com/1061d524-9d0f-4b25-97fd-48ebd0fce63c%2Fsceneglb.glb?1546534633849"></a-asset-item>
+            <!-- properties -->
+            <a-entity 
+            
+              gltf-model="#bird"
+              scale="1 1 1"
+              position="1 1 1"
+              animation-mixer= "clip:Take 001; 
+                                loop:2; 
+                                timeScale: 50; 
+                                crossFadeDuration: 1">
+                                
+            </a-entity>
+
+            
+        </a-nft>
+        <a-entity camera></a-entity>    
+    
+    
+    </a-scene>
+
+    <script type="text/javascript">
+      AFRAME.registerComponent('startButton', {
+        init: function () {
+          var cube = document.querySelector('a-scene').sceneEl.querySelector("#boxId");
+          cube.addEventListener("mousedown", function (evt) {
+            cube.setAttribute('material', 'color', 'red');
+          });
+          cube.addEventListener("mouseup", function (evt) {
+            cube.setAttribute('material', 'color', 'green');//we want to change this from "blue" to "green" to avoid some bugs
+          });
+          cube.addEventListener("mouseenter", function (evt) {
+            cube.setAttribute('material', 'color', 'green');
+          });
+          cube.addEventListener("mouseleave", function (evt) {
+            cube.setAttribute('material', 'color', 'blue');
+          });
+        }
+      });
+      </script>
+
+
+</body>
